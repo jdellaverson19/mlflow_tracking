@@ -8568,5 +8568,6 @@ trainStartDate = "2024-01-01"
 for i in stock_list:
     makeModel(i, trainStartDate)
 
-for i in etfList:
+"""for i in etfList:
     makeModel(i, trainStartDate)
+"""
