@@ -28,8 +28,8 @@ from datetime import datetime, timedelta
 # predictStock = argList[0]
 
 
-def getPrediction(predictStock):
-    a = os.listdir(path="./package")
+def getPrediction(predictStock, yesterday=False):
+    a = os.listdir(path="./models")
     predictStock = predictStock.upper()
     if f"{predictStock}.keras" in a:
         print("tis in there")
@@ -41,9 +41,16 @@ def getPrediction(predictStock):
         model = keras.models.load_model(rf"models/model.keras")
 
     # Now to do a specific prediction
-    stock_quote = pdr.get_data_yahoo(
-        predictStock, start="2024-01-01", end=datetime.now()
-    )
+    stock_quote = 0
+    if yesterday == False:
+        stock_quote = pdr.get_data_yahoo(
+            predictStock, start="2024-01-01", end=datetime.now()
+        )
+    else:
+        stock_quote = pdr.get_data_yahoo(
+            predictStock, start="2024-01-01", end=(datetime.now() - timedelta(1))
+        )
+
     new_df = stock_quote.filter(["Close"])
     last_60_days = new_df[-60:].values
     # Scale the data to be values between 0
@@ -51,10 +58,10 @@ def getPrediction(predictStock):
 
     # Create an empty list
     pred_list = []
-    # Appemd the past 60days
+    # Append the past 60days
     pred_list.append(last_60_days_scaled)
 
-    # Conver the pred_list data into numpy array
+    # Convert the pred_list data into numpy array
     pred_list = np.array(pred_list)
 
     # Reshape the data
@@ -67,6 +74,8 @@ def getPrediction(predictStock):
     return pred_price
 
 
+if __name__ == "__main__":
+    print(getPrediction("AAPL", True))
 # a = data.tail(1)["Close"]
 # time_match = a.index[0]
 # nextPred = pd.Series(

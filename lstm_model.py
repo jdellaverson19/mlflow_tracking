@@ -98,9 +98,9 @@ def makeModel(trainStock, trainStartDate):
         mlflow.log_metric("rmse", rmse)
 
         model.save(
-            rf".\models\{trainStock}.keras",
+            rf"./models/{trainStock}.keras",
         )
         joblib.dump(
             scaler,
-            rf".\models\{trainStock}.gz",
+            rf"./models/{trainStock}.gz",
         )
